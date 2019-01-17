@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component }from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Gallery from './components/Gallery'; //includes Image and NoResults components
