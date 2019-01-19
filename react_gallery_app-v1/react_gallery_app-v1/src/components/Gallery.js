@@ -1,31 +1,30 @@
 import React from 'react';
-import Image from '../components/Image';
 import NoResults from '../components/NoResults';
+import Image from '../components/Image';
 
-//props passed from App
+//stateless component, props passed in from App
 const Gallery = (props) => {
+  let result = props.data;
+  //console.log(result);
 
-    let result = props.data;
-    console.log(result);
+  //return img if there are results, else show NoResults component
+  if(result.length > 0) {
+    let img = result.map(r =>
+      <Image url={`https://farm${r.farm}.staticflickr.com/${r.server}/${r.id}_${r.secret}.jpg`} key={r.id} title={r.title} />)
 
-    //if no results, show no results component, else return results inside ul
-    if(result.length = 0) {
       return (
-        <div>
-          <NoResults /> //No Results component
-        </div>
+        <ul>
+          {img}
+        </ul>
       )
-    }
-    else if(result.length > 0) {
-      let img = result.map(r =>
-        <Image url={`https://farm${r.farm}.staticflickr.com/${r.server}/${r.id}_${r.secret}.jpg`} key={r.id} title={r.title} />)
-
-        return (
-          <ul>
-            {img}
-          </ul>
-        )
-    }
+  }
+  else {
+    return (
+      <div>
+        <NoResults /> //No Results component
+      </div>
+    )
+  }
 }
 
 export default Gallery;
