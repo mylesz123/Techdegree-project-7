@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import apiKey from './config';
+import axios from 'axios';
 import './App.css';
 import Gallery from './components/Gallery'; //includes Image and NoResults components
 import Header from './components/Header';
@@ -6,12 +8,12 @@ import Loadme from './components/Loadme';
 import Nav from './components/Nav';
 import NotFound from './components/NotFound';
 import SearchMe from './components/SearchMe';
+
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import apiKey from './config';
-import axios from 'axios';
+
 
 class App extends Component {
-  //to set up states
+  /*to set up states*/
   constructor() {
     super();
     this.state = {
@@ -22,7 +24,7 @@ class App extends Component {
       loading: true
     };
   }
-  // Mounting components
+  /* Mounting components */
   componentDidMount() {
     this.anySearch('snakes');
     this.outspaceSearch('outerspace');
@@ -30,7 +32,8 @@ class App extends Component {
     this.fwSearch('fireworks');
   }
 
-  // Search function to find whatever you are looking for
+  /* search functions using axios for fetching and catches errors */
+  // search function to find whatever you are looking for
   anySearch = (query) => {
     axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
       .then(response => {
@@ -58,7 +61,7 @@ class App extends Component {
     });
   }
 
-  // lizard Search
+  // hike/nature Search
   hikeSearch = (query) => {
     axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
     .then(response => {
@@ -72,7 +75,7 @@ class App extends Component {
     });
   }
 
-// elephant Search
+// fireworks Search
   fwSearch = (query) => {
     axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
     .then(response => {
@@ -86,7 +89,10 @@ class App extends Component {
     });
   }
 
-  // Renders page adding in components
+  /* manage rendering of components to the App*/
+  /*Renders page adding in components when the path matches the exact
+  when no routes are matched then render/ switch to not founf compoonent*/
+
   render() {
     return (
       <BrowserRouter>
