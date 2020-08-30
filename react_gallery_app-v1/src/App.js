@@ -1,132 +1,84 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 // import apiKey from './config';
 import axios from 'axios';
-import './App.css';
-import Gallery from './components/Gallery'; //includes Image and NoResults components
-import Header from './components/Header';
-import Loadme from './components/Loadme';
-import Nav from './components/Nav';
-import NotFound from './components/NotFound';
-import SearchMe from './components/SearchMe';
-
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-const apiKey = '';
-class App extends Component {
-  /*to set up states*/
-  constructor() {
-    super();
-    this.state = {
-      img: [],
-      outspace: [],
-      hike: [],
-      fw: [],
-      loading: true
-    };
-  }
-  /* Mounting components */
-  componentDidMount() {
-    this.anySearch('snakes');
-    this.outspaceSearch('outerspace');
-    this.hikeSearch('hike');
-    this.fwSearch('fireworks');
-  }
+import { buildSearchUrl, withData } from './helpers/index';
 
-  /* search functions using axios for fetching and catches errors */
-  // search function to find whatever you are looking for
-  anySearch = (query) => {
-    axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
+import Gallery from './components/Gallery'; //includes Image and NoResults components
+import Header from './components/Header';
+import Loading from './components/Loading';
+import Nav from './components/Nav';
+import NotFound from './components/NotFound';
+import Search from './components/Search';
+
+function App() {
+  const [state, setState] = useState({
+    img: [],
+    space: [],
+    hike: [],
+    fireworks: [],
+    loading: true
+  });
+
+  const { img, space, hike, fireworks, loading } = state;
+
+  const onSearch = (query, key) => {
+    axios.get(buildSearchUrl(query))
       .then(response => {
-        this.setState({
-          img: response.data.photos.photo,
-          loading: false
+        setState(prevState => {
+          return {
+            ...prevState,
+            ...{ [key]: response.data.photos.photo },
+            loading: false,
+          }
         });
-    })
-    .catch(error => {
-      console.log('Error, cannot fetch/parse data', error);
-    });
-  }
-
-  // outer space Search
-  outspaceSearch = (query) => {
-    axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
-    .then(response => {
-      this.setState({
-        outspace: response.data.photos.photo,
-        loading: false
-      });
-    })
+      })
       .catch(error => {
-        console.log('Error, cannot fetch/parse data', error);
-    });
-  }
-
-  // hike/nature Search
-  hikeSearch = (query) => {
-    axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
-    .then(response => {
-      this.setState({
-        hike: response.data.photos.photo,
-        loading: false
+        console.error('Error, cannot fetch/parse data', error);
       });
-    })
-      .catch(error => {
-        console.log('Error, cannot fetch/parse data', error);
-    });
   }
 
-// fireworks Search
-  fwSearch = (query) => {
-    axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
-    .then(response => {
-      this.setState({
-        fw: response.data.photos.photo,
-        loading: false
-      });
-    })
-      .catch(error => {
-        console.log('Error, cannot fetch/parse data', error);
-    });
+  const populateState = async () => {
+    await onSearch('snakes', 'img');
+    await onSearch('outerspace', 'space');
+    await onSearch('hike', 'hike');
+    await onSearch('fireworks', 'fireworks');
   }
 
-  /* manage rendering of components to the App*/
-  /*Renders page adding in components when the path matches the exact
-  when no routes are matched then render/ switch to not founf compoonent*/
+  useEffect(() => {
+    populateState();
+  }, []);
 
-  render() {
-    return (
-      <BrowserRouter>
-        <div>
-          <div>
-            <Header />
-              <Route exact path="/" component={() => <SearchMe onSearch={this.anySearch} />} />
-              <Route exact path="/outspace" component={() => <SearchMe onSearch={this.outspaceSearch} />} />
-              <Route exact path="/hike" component={() => <SearchMe onSearch={this.hikeSearch} />} />
-              <Route exact path="/fireworks" component={() => <SearchMe onSearch={this.fwSearch} />}/>
-              <Route exact path="/search" component={() => <SearchMe onSearch={this.performSearch} />} />
-            <Nav />
-          </div>
+  return (
+    <BrowserRouter>
+      <div>
+        <Header />
+        <Route exact path="/" component={withData(Search, onSearch)} />
+        <Route exact path="/space" component={withData(Search, onSearch)} />
+        <Route exact path="/hike" component={withData(Search, onSearch)} />
+        <Route exact path="/fireworks" component={withData(Search, onSearch)} />
+        <Route exact path="/search" component={withData(Search, onSearch)} />
+        <Nav />
 
-          <div className='photo-container'>
-            {
-              (this.state.loading)
-              ? <Loadme /> :
-              <div>
-                <Switch>
-                  <Route exact path="/" render={() => <Gallery data={this.state.img} />} />
-                  <Route exact path="/outspace" render={() => <Gallery data={this.state.outspace} />} />
-                  <Route path="/hike" render={() => <Gallery data={this.state.hike} />} />
-                  <Route path="/fireworks" render={() => <Gallery data={this.state.fw} />} />
-                  <Route path="/search" render={() => <Gallery data={this.state.img} />} />
-                  <Route component={NotFound} />
-                </Switch>
-              </div>
-            }
-          </div>
+        <div className='photo-container'>
+          {loading
+            ? (<Loading />)
+            : (
+              <Switch>
+                <Route exact path="/" render={() => <Gallery data={img} />} />
+                <Route exact path="/space" render={() => <Gallery data={space} />} />
+                <Route path="/hike" render={() => <Gallery data={hike} />} />
+                <Route path="/fireworks" render={() => <Gallery data={fireworks} />} />
+                <Route path="/search" render={() => <Gallery data={img} />} />
+                <Route component={NotFound} />
+              </Switch>
+            )
+          }
         </div>
-      </BrowserRouter>
-    );
-  } //end render
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App;
