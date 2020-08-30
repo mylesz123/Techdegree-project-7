@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-// show nav links in url and buttons
+
 const Nav = () => {
   return (
     <nav>

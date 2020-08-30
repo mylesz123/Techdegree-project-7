@@ -8,5 +8,5 @@ const Header = (props) => {
       </div>
   )
 }
-//exporting the header div
+
 export default Header

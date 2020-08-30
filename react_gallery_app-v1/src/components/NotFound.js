@@ -1,5 +1,5 @@
 import React from 'react';
-// 404
+
 const NotFound = () => {
   return (
     <div>

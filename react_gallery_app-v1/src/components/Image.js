@@ -1,9 +1,9 @@
 import React from 'react';
-//<li> template for <Gallery /> component to accept props/data passed in.
-const Image = (props) => {
+
+const Image = ({ url, title }) => {
   return(
     <li>
-      <img src={props.url} alt={props.title} />
+      <img src={url} alt={title} />
     </li>
   )
 }

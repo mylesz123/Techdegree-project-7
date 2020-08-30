@@ -3,7 +3,7 @@ import React from 'react';
 const NoResults = (props) => {
   return (
     <div>
-      <h2>We don't have that peice in our Gallery, Feel free to browse our other collections</h2>
+      <h2>We don't have that piece in our Gallery, Feel free to browse our other collections</h2>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 //this component has state, needs to be memorized
 class Search extends Component {
-
     state = {
       data: ""
     }
