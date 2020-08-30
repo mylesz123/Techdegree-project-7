@@ -4,14 +4,17 @@ import Image from '../components/Image';
 
 //stateless component, props passed in from App
 const Gallery = ({ data }) => {
-  console.log(data)
     return (
       <>
         {data 
           ? (
             <ul>
               {data.map(r => (
-                <Image url={`https://farm${r.farm}.staticflickr.com/${r.server}/${r.id}_${r.secret}.jpg`} key={r.id} title={r.title} />)
+                <Image 
+                  key={r.id}
+                  url={`https://farm${r.farm}.staticflickr.com/${r.server}/${r.id}_${r.secret}.jpg`}
+                  title={r.title} 
+                />)
               )}
             </ul>
           )

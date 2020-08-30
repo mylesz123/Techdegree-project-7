@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Loadme = () => {
+const Loading = () => {
   // This one is for the loading icon.
   return(
     <div>
@@ -10,4 +10,4 @@ const Loadme = () => {
   )
 }
 
-export default Loadme;
+export default Loading;

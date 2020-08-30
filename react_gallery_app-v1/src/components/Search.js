@@ -1,25 +1,24 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
-export default function Search({ onSearch }) {
-    const [data, setData] = useState('');
-    const ref = useRef(null);
+export default function Search({ onSearch, location }) {
+    const [input, setInput] = useState('');
 
-    // input value = search data
-    const handleSearch = (e) => {
-      setData(e.target.value);
+    const onChange = (e) => {
+      setInput(e.target.value);
     }
-    // to show matches, have to refresh page often.....
+
+    // to show matches, have to refresh page often..
     const handleSubmit = (e) => {
       e.preventDefault();
-      onSearch(ref.current.value);
+      const stateKey = location.pathname.substr(1);
+      onSearch(input, stateKey);
     }
 
     return (
       <form className="search-form" onSubmit={handleSubmit}>
         <input type="search"
           name="search"
-          onChange={handleSearch}
-          ref={ref}
+          onChange={onChange}
           placeholder="Looking for something?"
           required
         />
