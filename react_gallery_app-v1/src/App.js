@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import apiKey from './config';
+// import apiKey from './config';
 import axios from 'axios';
 import './App.css';
 import Gallery from './components/Gallery'; //includes Image and NoResults components
@@ -11,7 +11,7 @@ import SearchMe from './components/SearchMe';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-
+const apiKey = '';
 class App extends Component {
   /*to set up states*/
   constructor() {
